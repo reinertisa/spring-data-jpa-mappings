@@ -16,7 +16,7 @@ public interface UserService {
 
     UserDto createUser(@Valid UserRequest userRequest);
 
-    UserDto updateUser(Long id, @Valid UserRequest userRequest) throws ResourceNotFoundException;
+    UserDto updateUser(Long id, UserRequest userRequest) throws ResourceNotFoundException;
 
     void deleteUser(Long id) throws ResourceNotFoundException;
 }
