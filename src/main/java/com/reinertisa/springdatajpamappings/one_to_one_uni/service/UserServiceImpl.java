@@ -101,7 +101,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> filterByName(String name) {
-        List<UserEntity> users = userRepository.findByName(name);
         return userRepository.findByName(name)
                 .stream()
                 .map(userMapper)
