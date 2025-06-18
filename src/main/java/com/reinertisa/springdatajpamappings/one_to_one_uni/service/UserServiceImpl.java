@@ -73,6 +73,18 @@ public class UserServiceImpl implements UserService {
         Optional.ofNullable(userRequest.getEmail())
                 .ifPresent(user::setEmail);
 
+        AddressEntity address = user.getAddressEntity();
+        Optional.ofNullable(userRequest.getAddress().getCity())
+                        .ifPresent(address::setCity);
+        Optional.ofNullable(userRequest.getAddress().getState())
+                        .ifPresent(address::setState);
+        Optional.ofNullable(userRequest.getAddress().getCountry())
+                        .ifPresent(address::setCountry);
+        Optional.ofNullable(userRequest.getAddress().getZipCode())
+                        .ifPresent(address::setZipCode);
+
+        user.setAddressEntity(address);
+
         user = userRepository.save(user);
 
         return userMapper.apply(user);
