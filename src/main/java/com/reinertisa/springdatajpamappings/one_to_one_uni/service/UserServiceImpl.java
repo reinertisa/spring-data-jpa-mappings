@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -96,5 +97,14 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found for ID: " + id));
         userRepository.delete(user);
+    }
+
+    @Override
+    public List<UserDto> filterByName(String name) {
+        List<UserEntity> users = userRepository.findByName(name);
+        return userRepository.findByName(name)
+                .stream()
+                .map(userMapper)
+                .toList();
     }
 }
