@@ -19,8 +19,12 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "city", nullable = false)
     private String city;
+    @Column(name = "state", nullable = false)
     private String state;
+    @Column(name = "country", nullable = false)
     private String country;
+    @Column(name = "zip_code", nullable = false)
     private Integer zipCode;
 }
