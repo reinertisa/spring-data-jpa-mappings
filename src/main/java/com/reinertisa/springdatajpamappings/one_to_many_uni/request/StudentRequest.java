@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Builder
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = false)
@@ -23,4 +25,5 @@ public class StudentRequest {
     private String email;
     @NotNull(message = "Gender is required.")
     private Gender gender;
+    private List<LaptopRequest> laptops;
 }
