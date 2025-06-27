@@ -33,7 +33,7 @@ public class StudentEntity {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
     private Gender gender;
 
@@ -44,7 +44,8 @@ public class StudentEntity {
             orphanRemoval = true
     )
     @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "Student_FK1"))
-    Set<LaptopEntity> laptops = new HashSet<>();
+    @Builder.Default
+    private Set<LaptopEntity> laptops = new HashSet<>();
 
     public boolean addLaptop(LaptopEntity laptop) {
         Objects.requireNonNull(laptop);
