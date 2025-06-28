@@ -78,7 +78,6 @@ public class UserController {
     @GetMapping("/filter")
     public ResponseEntity<List<UserDto>> filterByName(@RequestParam("keyword") String keyword) {
         try {
-            System.out.println("keyword: " + keyword);
             return ResponseEntity.status(HttpStatus.OK).body(userService.filterByName(keyword));
         } catch (Exception ex) {
            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
