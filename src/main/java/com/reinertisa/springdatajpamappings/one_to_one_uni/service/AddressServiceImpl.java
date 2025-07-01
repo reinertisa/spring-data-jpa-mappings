@@ -37,8 +37,8 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressDto updateAddress(Long id, AddressRequest addressRequest) throws ResourceNotFoundException {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(addressRequest);
+        Objects.requireNonNull(id, "Address ID must not be null.");
+        Objects.requireNonNull(addressRequest, "Address request must not be null.");
 
         AddressEntity address = addressRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Address not found for ID: " + id));
@@ -57,6 +57,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressDto> filterAddresses(String keyword) {
+        Objects.requireNonNull(keyword, "Keyword must not be null.");
         return addressRepository.findByKeyword(keyword)
                 .stream()
                 .map(addressMapper)
