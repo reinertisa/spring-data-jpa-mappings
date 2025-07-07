@@ -19,5 +19,5 @@ public class ProjectEntity {
     private Long id;
 
     @Column(name = "project_name", nullable = false)
-    private String projectNama;
+    private String projectName;
 }
