@@ -21,7 +21,7 @@ public class EmployeeController {
 
     @GetMapping("")
     public ResponseEntity<Page<EmployeeDto>> getAllEmployees(
-            @PageableDefault(size = 20, page = 0, sort = "name")Pageable pageable) {
+            @PageableDefault(size = 20, page = 0, sort = "name") Pageable pageable) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(employeeService.getAllEmployees(pageable));
         } catch (Exception ex) {
