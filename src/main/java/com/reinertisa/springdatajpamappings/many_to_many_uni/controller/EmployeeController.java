@@ -49,4 +49,15 @@ public class EmployeeController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody EmployeeRequest employeeRequest, @PathVariable Long id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(employeeService.updateEmployee(id, employeeRequest));
+        } catch (ResourceNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
 }
