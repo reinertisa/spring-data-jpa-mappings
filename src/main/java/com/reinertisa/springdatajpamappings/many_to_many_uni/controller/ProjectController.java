@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/projects")
@@ -46,6 +48,15 @@ public class ProjectController {
             return ResponseEntity.status(HttpStatus.OK).body(projectService.updateProject(id, projectRequest));
         } catch (ResourceNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<ProjectDto>> filter(@RequestParam("keyword") String keyword) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(projectService.filterProjects(keyword));
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
