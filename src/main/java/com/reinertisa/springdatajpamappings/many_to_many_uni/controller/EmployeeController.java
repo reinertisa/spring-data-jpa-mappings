@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/employees")
@@ -56,6 +58,15 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.OK).body(employeeService.updateEmployee(id, employeeRequest));
         } catch (ResourceNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<EmployeeDto>> filter(@RequestParam("keyword") String keyword) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(employeeService.filterByName(keyword));
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
