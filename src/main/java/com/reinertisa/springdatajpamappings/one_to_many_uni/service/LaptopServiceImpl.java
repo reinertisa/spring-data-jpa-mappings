@@ -7,6 +7,7 @@ import com.reinertisa.springdatajpamappings.one_to_many_uni.mapper.LaptopMapper;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.repository.LaptopRepository;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.request.LaptopRequest;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,15 @@ public class LaptopServiceImpl implements LaptopService {
         return laptopRepository.findById(id)
                 .map(laptopMapper)
                 .orElseThrow(() -> new ResourceNotFoundException("Laptop not found for ID: " + id));
+    }
+
+    @Override
+    public LaptopDto createLaptop(@Valid LaptopRequest laptopRequest) {
+        LaptopEntity laptop = LaptopEntity.builder()
+                .brand(laptopRequest.getBrand())
+                .model(laptopRequest.getModel())
+                .build();
+        return laptopMapper.apply(laptopRepository.save(laptop));
     }
 
     @Override
