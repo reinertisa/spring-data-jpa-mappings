@@ -39,4 +39,21 @@ public class EmployeeEntity {
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private Set<ProjectEntity> projects = new HashSet<>();
+
+    // helper methods
+    public boolean addProject(ProjectEntity project) {
+        return projects.add(project);
+    }
+
+    public boolean addAllProjects(Set<ProjectEntity> projectSet) {
+        return projects.addAll(projectSet);
+    }
+
+    public boolean removeProject(ProjectEntity project) {
+        return projects.remove(project);
+    }
+
+    public void removeAllProjects() {
+        projects.clear();
+    }
 }
