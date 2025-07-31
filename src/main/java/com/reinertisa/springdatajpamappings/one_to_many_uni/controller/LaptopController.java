@@ -4,6 +4,7 @@ import com.reinertisa.springdatajpamappings.one_to_many_uni.dto.LaptopDto;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.exception.ResourceNotFoundException;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.request.LaptopRequest;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.service.LaptopService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,15 @@ public class LaptopController {
             return ResponseEntity.status(HttpStatus.OK).body(laptopService.getLaptopById(id));
         } catch (ResourceNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<LaptopDto> createLaptop(@RequestBody @Valid LaptopRequest laptopRequest) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(laptopService.createLaptop(laptopRequest));
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
