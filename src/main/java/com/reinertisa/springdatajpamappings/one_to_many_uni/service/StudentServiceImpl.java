@@ -59,6 +59,12 @@ public class StudentServiceImpl implements StudentService {
             for (Long id : studentRequest.getExistingLaptopIds()) {
                 LaptopEntity existingLap = laptopRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Laptop not found for ID: " + id));
+
+                Optional<StudentEntity> owner = studentRepository.findOwnerOfLaptop(id);
+                if (owner.isPresent() && !owner.get().getId().equals(student.getId())) {
+                    throw new IllegalStateException("Laptop ID " + id + " is already assigned to another student.");
+                }
+
                 student.addLaptop(existingLap);
             }
         }
