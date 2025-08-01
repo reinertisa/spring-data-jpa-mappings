@@ -5,6 +5,7 @@ import com.reinertisa.springdatajpamappings.one_to_many_uni.entity.LaptopEntity;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.entity.StudentEntity;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.exception.ResourceNotFoundException;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.mapper.StudentMapper;
+import com.reinertisa.springdatajpamappings.one_to_many_uni.repository.LaptopRepository;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.repository.StudentRepository;
 import com.reinertisa.springdatajpamappings.one_to_many_uni.request.StudentRequest;
 import jakarta.transaction.Transactional;
@@ -27,6 +28,7 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final LaptopRepository laptopRepository;
 
     @Override
     public Page<StudentDto> getAllStudents(Pageable pageable) {
@@ -52,11 +54,23 @@ public class StudentServiceImpl implements StudentService {
                 .gender(studentRequest.getGender())
                 .build();
 
-        Set<LaptopEntity> laptops = studentRequest.getLaptops().stream().map(l -> LaptopEntity.builder()
-                .brand(l.getBrand())
-                .model(l.getModel())
-                .build()).collect(Collectors.toSet());
-        student.addAllLaptops(laptops);
+        // Add existing laptops
+        if (studentRequest.getExistingLaptopIds() != null) {
+            for (Long id : studentRequest.getExistingLaptopIds()) {
+                LaptopEntity existingLap = laptopRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Laptop not found for ID: " + id));
+                student.addLaptop(existingLap);
+            }
+        }
+
+        // Add new laptops
+        if (studentRequest.getNewLaptops() != null) {
+            Set<LaptopEntity> newLaptops = studentRequest.getNewLaptops().stream().map(l -> LaptopEntity.builder()
+                    .brand(l.getBrand())
+                    .model(l.getModel())
+                    .build()).collect(Collectors.toSet());
+            student.addAllLaptops(newLaptops);
+        }
 
         return studentMapper.apply(studentRepository.save(student));
     }
@@ -82,9 +96,9 @@ public class StudentServiceImpl implements StudentService {
         Optional.ofNullable(studentRequest.getGender())
                 .ifPresent(student::setGender);
 
-        if (!studentRequest.getLaptops().isEmpty()) {
+        if (!studentRequest.getNewLaptops().isEmpty()) {
             student.removeAllLaptops();
-            student.addAllLaptops(studentRequest.getLaptops().stream()
+            student.addAllLaptops(studentRequest.getNewLaptops().stream()
                     .map(l ->
                             LaptopEntity.builder()
                                     .brand(l.getBrand())
