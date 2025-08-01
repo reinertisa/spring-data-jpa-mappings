@@ -25,5 +25,6 @@ public class StudentRequest {
     private String email;
     @NotNull(message = "Gender is required.")
     private Gender gender;
-    private List<LaptopRequest> laptops;
+    private List<LaptopRequest> newLaptops;
+    private List<Long> existingLaptopIds;
 }
