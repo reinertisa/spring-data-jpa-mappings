@@ -4,6 +4,7 @@ import com.reinertisa.springdatajpamappings.many_to_many_uni.dto.ProjectDto;
 import com.reinertisa.springdatajpamappings.many_to_many_uni.exception.ResourceNotFoundException;
 import com.reinertisa.springdatajpamappings.many_to_many_uni.request.ProjectRequest;
 import com.reinertisa.springdatajpamappings.many_to_many_uni.service.ProjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,15 @@ public class ProjectController {
             return ResponseEntity.status(HttpStatus.OK).body(projectService.getProjectById(id));
         } catch (ResourceNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<ProjectDto> createProject(@RequestBody @Valid ProjectRequest projectRequest) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(projectRequest));
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
