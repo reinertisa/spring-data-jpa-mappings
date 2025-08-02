@@ -19,6 +19,7 @@ public class EmployeeMapper implements Function<EmployeeEntity, EmployeeDto> {
         return EmployeeDto.builder()
                 .id(employee.getId())
                 .name(employee.getName())
+                .role(employee.getRole())
                 .projects(employee.getProjects().stream().map(projectMapper).toList())
                 .build();
     }
