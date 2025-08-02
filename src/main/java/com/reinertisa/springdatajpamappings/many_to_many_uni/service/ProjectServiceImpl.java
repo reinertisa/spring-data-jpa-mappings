@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -24,12 +25,16 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Page<ProjectDto> getAllProjects(Pageable pageable) {
-        return null;
+        Page<ProjectEntity> projects = projectRepository.findAll(pageable);
+        return projects.map(projectMapper);
     }
 
     @Override
     public ProjectDto getProjectById(Long id) throws ResourceNotFoundException {
-        return null;
+        Objects.requireNonNull(id, "Project Id must not be null");
+        return projectRepository.findById(id)
+                .map(projectMapper)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found for ID: " + id));
     }
 
     @Override
