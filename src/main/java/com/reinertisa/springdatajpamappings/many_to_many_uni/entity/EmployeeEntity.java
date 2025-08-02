@@ -38,6 +38,7 @@ public class EmployeeEntity {
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
+    @Builder.Default
     private Set<ProjectEntity> projects = new HashSet<>();
 
     // helper methods
