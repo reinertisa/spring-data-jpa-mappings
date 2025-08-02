@@ -17,5 +17,6 @@ public class EmployeeRequest {
     private String name;
     @NotNull(message = "Role is required")
     private Role role;
-    private List<ProjectRequest> projects;
+    private List<ProjectRequest> newProjects;
+    private List<Long> existingProjectIds;
 }
