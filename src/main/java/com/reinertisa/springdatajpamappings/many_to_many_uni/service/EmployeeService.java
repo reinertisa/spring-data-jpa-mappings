@@ -13,7 +13,7 @@ public interface EmployeeService {
 
     Page<EmployeeDto> getAllEmployees(Pageable pageable);
 
-    EmployeeDto getEmployeeById(Long Id) throws ResourceNotFoundException;
+    EmployeeDto getEmployeeById(Long id) throws ResourceNotFoundException;
 
     EmployeeDto createEmployee(@Valid EmployeeRequest employeeRequest);
 
