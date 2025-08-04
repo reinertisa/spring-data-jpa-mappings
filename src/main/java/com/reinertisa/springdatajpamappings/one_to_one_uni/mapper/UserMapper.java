@@ -20,7 +20,7 @@ public class UserMapper implements Function<UserEntity, UserDto> {
                 .firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName())
                 .email(userEntity.getEmail())
-                .address(addressMapper.apply(userEntity.getAddressEntity()))
+                .address(userEntity.getAddressEntity() != null ? addressMapper.apply(userEntity.getAddressEntity()) : null)
                 .build();
     }
 }

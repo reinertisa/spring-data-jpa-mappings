@@ -5,6 +5,7 @@ import com.reinertisa.springdatajpamappings.one_to_one_uni.entity.AddressEntity;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.entity.UserEntity;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.exception.ResourceNotFoundException;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.mapper.UserMapper;
+import com.reinertisa.springdatajpamappings.one_to_one_uni.repository.AddressRepository;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.repository.UserRepository;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.request.UserRequest;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AddressRepository addressRepository;
 
 
     @Override
@@ -49,13 +51,27 @@ public class UserServiceImpl implements UserService {
                 .email(userRequest.getEmail())
                 .build();
 
-        AddressEntity address = AddressEntity.builder()
-                .city(userRequest.getAddress().getCity())
-                .state(userRequest.getAddress().getState())
-                .country(userRequest.getAddress().getCountry())
-                .zipCode(userRequest.getAddress().getZipCode())
-                .build();
-        user.setAddressEntity(address);
+        if (userRequest.getAddressId() != null) {
+            AddressEntity address = addressRepository.findById(userRequest.getAddressId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Address not found for ID: " + userRequest.getAddressId()));
+
+            // Check if any user is already using this address
+            Optional<UserEntity> existingUser = userRepository.findByAddressEntity(address);
+            if (existingUser.isPresent()) {
+                throw new RuntimeException("This address is already used by another user.");
+            }
+
+            user.setAddressEntity(address);
+        } else if (userRequest.getAddress() != null) {
+            AddressEntity address = AddressEntity.builder()
+                    .city(userRequest.getAddress().getCity())
+                    .state(userRequest.getAddress().getState())
+                    .country(userRequest.getAddress().getCountry())
+                    .zipCode(userRequest.getAddress().getZipCode())
+                    .build();
+            user.setAddressEntity(address);
+        }
+
         return userMapper.apply(userRepository.save(user));
     }
 
