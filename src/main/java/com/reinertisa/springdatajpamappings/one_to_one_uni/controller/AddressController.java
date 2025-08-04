@@ -4,6 +4,7 @@ import com.reinertisa.springdatajpamappings.one_to_one_uni.dto.AddressDto;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.exception.ResourceNotFoundException;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.request.AddressRequest;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.service.AddressService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,15 @@ public class AddressController {
             return ResponseEntity.status(HttpStatus.OK).body(addressService.getAddressById(id));
         } catch (ResourceNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<AddressDto> createAddress(@RequestBody @Valid AddressRequest addressRequest) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(addressService.createAddress(addressRequest));
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }

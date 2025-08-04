@@ -6,6 +6,7 @@ import com.reinertisa.springdatajpamappings.one_to_one_uni.exception.ResourceNot
 import com.reinertisa.springdatajpamappings.one_to_one_uni.mapper.AddressMapper;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.repository.AddressRepository;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.request.AddressRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,17 @@ public class AddressServiceImpl implements AddressService {
         return addressRepository.findById(id)
                 .map(addressMapper)
                 .orElseThrow(() -> new ResourceNotFoundException("Address not found for ID: " + id));
+    }
+
+    @Override
+    public AddressDto createAddress(@Valid AddressRequest addressRequest) {
+        AddressEntity address = AddressEntity.builder()
+                .city(addressRequest.getCity())
+                .state(addressRequest.getState())
+                .country(addressRequest.getCountry())
+                .zipCode(addressRequest.getZipCode())
+                .build();
+        return addressMapper.apply(addressRepository.save(address));
     }
 
     @Override
