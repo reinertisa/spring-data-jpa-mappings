@@ -5,6 +5,7 @@ import com.reinertisa.springdatajpamappings.one_to_one_uni.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
@@ -14,6 +15,8 @@ public class UserMapper implements Function<UserEntity, UserDto> {
 
     @Override
     public UserDto apply(UserEntity userEntity) {
+
+        Objects.requireNonNull(userEntity, "UserEntity must not be null");
 
         return UserDto.builder()
                 .id(userEntity.getId())
