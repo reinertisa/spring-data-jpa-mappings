@@ -61,4 +61,9 @@ class UserMapperTest {
         verify(addressMapper).apply(addressEntity);
     }
 
+    @Test
+    void shouldThrowExceptionWhenUserEntityIsNull() {
+        Exception ex = assertThrows(NullPointerException.class, () -> userMapper.apply(null));
+        assertEquals("UserEntity must not be null", ex.getMessage());
+    }
 }
