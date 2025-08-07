@@ -154,4 +154,18 @@ class UserServiceImplTest {
         verify(userRepository, times(1)).delete(user);
     }
 
+    @Test
+    void shouldFilterByName() {
+        String name = "Isa";
+        UserEntity userEntity = new UserEntity();
+        UserDto userDto = new UserDto();
+
+        when(userRepository.findByName(name)).thenReturn(List.of(userEntity));
+        when(userMapper.apply(userEntity)).thenReturn(userDto);
+
+        List<UserDto> rez = userService.filterByName(name);
+
+        assertEquals(1, rez.size());
+    }
+
 }
