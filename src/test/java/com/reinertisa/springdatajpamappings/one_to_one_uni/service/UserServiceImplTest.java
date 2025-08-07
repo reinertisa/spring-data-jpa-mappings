@@ -8,6 +8,7 @@ import com.reinertisa.springdatajpamappings.one_to_one_uni.mapper.UserMapper;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.repository.AddressRepository;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.repository.UserRepository;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.request.UserRequest;
+import org.h2.engine.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -119,6 +120,25 @@ class UserServiceImplTest {
         assertEquals(1L, rez.getId());
         verify(userRepository).save(any(UserEntity.class));
         verify(userRepository, times(1)).save(any(UserEntity.class));
+    }
+
+    @Test
+    void shouldThrowWhenAddressAlreadyUsed() {
+        AddressEntity existingAddress = new AddressEntity();
+        existingAddress.setId(1L);
+
+        UserEntity existingUser = new UserEntity();
+        existingUser.setId(99L);
+        existingUser.setAddressEntity(existingAddress);
+
+        UserRequest request = UserRequest.builder()
+                .addressId(1L)
+                .build();
+
+        when(addressRepository.findById(1L)).thenReturn(Optional.of(existingAddress));
+        when(userRepository.findByAddressEntity(existingAddress)).thenReturn(Optional.of(existingUser));
+
+        assertThrows(RuntimeException.class, () -> userService.createUser(request));
     }
 
 }
