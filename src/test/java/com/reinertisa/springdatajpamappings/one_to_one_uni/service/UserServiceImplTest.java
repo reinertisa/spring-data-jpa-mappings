@@ -141,4 +141,17 @@ class UserServiceImplTest {
         assertThrows(RuntimeException.class, () -> userService.createUser(request));
     }
 
+    @Test
+    void shouldDeleteUser() {
+        Long id = 1L;
+        UserEntity user = new UserEntity();
+        user.setId(id);
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(user));
+        userService.deleteUser(id);
+
+        verify(userRepository).delete(user);
+        verify(userRepository, times(1)).delete(user);
+    }
+
 }
