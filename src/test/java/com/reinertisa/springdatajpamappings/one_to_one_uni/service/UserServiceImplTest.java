@@ -1,10 +1,13 @@
 package com.reinertisa.springdatajpamappings.one_to_one_uni.service;
 
 import com.reinertisa.springdatajpamappings.one_to_one_uni.dto.UserDto;
+import com.reinertisa.springdatajpamappings.one_to_one_uni.entity.AddressEntity;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.entity.UserEntity;
+import com.reinertisa.springdatajpamappings.one_to_one_uni.exception.ResourceNotFoundException;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.mapper.UserMapper;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.repository.AddressRepository;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.repository.UserRepository;
+import com.reinertisa.springdatajpamappings.one_to_one_uni.request.UserRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -69,6 +72,53 @@ class UserServiceImplTest {
         assertNotNull(rez);
         verify(userRepository).findById(id);
         verify(userRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void getUserByIdThrowsResourceNotfound() {
+        Long id = 2L;
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> userService.getUserById(id));
+
+        assertEquals("User not found for ID: " + id, ex.getMessage());
+    }
+
+    @Test
+    void shouldCreateUserWithNewAddress() {
+        UserRequest request = UserRequest.builder()
+                .firstName("Isa")
+                .lastName("Reinert")
+                .email("test@gmail.com")
+                .build();
+
+        AddressEntity address = AddressEntity.builder()
+                .city("Sunnyvale")
+                .state("CA")
+                .country("USA")
+                .zipCode(94085)
+                .build();
+
+        UserEntity savedUser = UserEntity.builder()
+                .id(1L)
+                .firstName("Isa")
+                .lastName("Reinert")
+                .email("test@gmail.com")
+                .addressEntity(address)
+                .build();
+
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+
+        // mock the calls
+        when(userRepository.save(any(UserEntity.class))).thenReturn(savedUser);
+        when(userMapper.apply(savedUser)).thenReturn(userDto);
+
+        UserDto rez = userService.createUser(request);
+
+        assertEquals(1L, rez.getId());
+        verify(userRepository).save(any(UserEntity.class));
+        verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
 }
