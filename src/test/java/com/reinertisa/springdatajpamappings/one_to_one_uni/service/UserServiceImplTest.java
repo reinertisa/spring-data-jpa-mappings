@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -45,12 +46,29 @@ class UserServiceImplTest {
         when(userRepository.findAll(pageable)).thenReturn(userPage);
         when(userMapper.apply(any(UserEntity.class))).thenReturn(userDto);
 
-        Page<UserDto> result = userService.getAllUser(pageable);
+        Page<UserDto> rez = userService.getAllUser(pageable);
 
-        assertEquals(1, result.getTotalElements());
+        assertEquals(1, rez.getTotalElements());
         verify(userRepository).findAll(pageable);
         verify(userRepository, times(1)).findAll(pageable);
+    }
 
+    @Test
+    void shouldReturnUserById() {
+        // Given
+        Long id = 1L;
+        UserEntity userEntity = new UserEntity();
+        UserDto userDto = new UserDto();
+
+        // mock the calls
+        when(userRepository.findById(id)).thenReturn(Optional.of(userEntity));
+        when(userMapper.apply(userEntity)).thenReturn(userDto);
+
+        UserDto rez = userService.getUserById(id);
+
+        assertNotNull(rez);
+        verify(userRepository).findById(id);
+        verify(userRepository, times(1)).findById(id);
     }
 
 }
