@@ -23,7 +23,7 @@ public class DriverEntity {
 
     @JsonManagedReference
     @OneToOne(
-            targetEntity = DriverEntity.class,
+            targetEntity = LicenseEntity.class,
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER,
             orphanRemoval = true
