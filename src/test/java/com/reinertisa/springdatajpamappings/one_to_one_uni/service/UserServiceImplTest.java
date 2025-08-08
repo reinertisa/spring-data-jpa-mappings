@@ -8,7 +8,6 @@ import com.reinertisa.springdatajpamappings.one_to_one_uni.mapper.UserMapper;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.repository.AddressRepository;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.repository.UserRepository;
 import com.reinertisa.springdatajpamappings.one_to_one_uni.request.UserRequest;
-import org.h2.engine.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
