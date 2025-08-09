@@ -21,7 +21,7 @@ public class DriverController {
 
     @GetMapping("")
     public ResponseEntity<Page<DriverDto>> getAllDrivers(
-            @PageableDefault(size = 20, page = 0, sort = "fullName")Pageable pageable) {
+            @PageableDefault(size = 20, page = 0, sort = "fullName") Pageable pageable) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(driverService.getAllDrivers(pageable));
         } catch (Exception ex) {

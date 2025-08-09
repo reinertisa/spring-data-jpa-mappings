@@ -1,7 +1,10 @@
 package com.reinertisa.springdatajpamappings.one_to_one_bi.service;
 
 import com.reinertisa.springdatajpamappings.one_to_one_bi.dto.DriverDto;
+import com.reinertisa.springdatajpamappings.one_to_one_bi.entity.DriverEntity;
 import com.reinertisa.springdatajpamappings.one_to_one_bi.exception.ResourceNotFoundException;
+import com.reinertisa.springdatajpamappings.one_to_one_bi.mapper.DriverMapper;
+import com.reinertisa.springdatajpamappings.one_to_one_bi.repository.DriverRepository;
 import com.reinertisa.springdatajpamappings.one_to_one_bi.request.DriverRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
 public class DriverServiceImpl implements DriverService {
+    private final DriverRepository driverRepository;
+    private final DriverMapper driverMapper;
+
     @Override
     public Page<DriverDto> getAllDrivers(Pageable pageable) {
-        return null;
+        Page<DriverEntity> drivers = driverRepository.findAll(pageable);
+        return drivers.map(driverMapper);
     }
 
     @Override
