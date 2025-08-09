@@ -29,5 +29,5 @@ public class LicenseEntity {
             mappedBy = "license",
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
     )
-    private LicenseEntity licenseEntity;
+    private DriverEntity driver;
 }
