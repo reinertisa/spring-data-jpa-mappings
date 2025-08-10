@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,10 @@ public class LicenseServiceImpl implements LicenseService {
 
     @Override
     public LicenseDto getLicenseById(Long id) throws ResourceNotFoundException {
-        return null;
+        Objects.requireNonNull(id, "License ID must not be null");
+        return licenseRepository.findById(id)
+                .map(licenseMapper)
+                .orElseThrow(() -> new ResourceNotFoundException("License not found for ID: " + id));
     }
 
     @Override
