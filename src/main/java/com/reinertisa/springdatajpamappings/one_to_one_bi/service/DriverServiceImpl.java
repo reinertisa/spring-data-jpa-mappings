@@ -54,6 +54,7 @@ public class DriverServiceImpl implements DriverService {
             if (existingLicense.getDriver() != null) {
                 throw new RuntimeException("License is already used by another driver.");
             }
+            driver.setLicense(existingLicense);
         } else if (driverRequest.getLicense() != null) {
             Optional<LicenseEntity> existingLicenseOpt = licenseRepository.findByLicenseNumberAndState(driverRequest.getLicense().getLicenseNumber(), driverRequest.getLicense().getState());
 
