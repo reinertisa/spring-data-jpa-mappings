@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "licenses")
+@Table(
+        name = "licenses",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"license_number", "state"})}
+)
 public class LicenseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
