@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,10 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverDto getDriverById(Long id) throws ResourceNotFoundException {
-        return null;
+        Objects.requireNonNull(id, "Driver ID must not be null");
+        return driverRepository.findById(id)
+                .map(driverMapper)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found for ID: " + id));
     }
 
     @Override
